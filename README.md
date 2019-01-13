@@ -89,7 +89,6 @@ analogy to translate code in new language.`
   - Trefethen, L. N. “The SIAM 100-Dollar, 100-Digit Challenge.” The
     SIAM 100-Dollar, 100-Digit Challenge. Accessed January 13, 2019.
     <https://people.maths.ox.ac.uk/trefethen/hundred.html>.
-  - Hughes, Colin. “Project Euler.” Project Euler. Accessed January 13,
-    1.    <https://projecteuler.net/>.
+  - Hughes, Colin. “Project Euler.” Project Euler. Accessed January 13, <https://projecteuler.net/>.
   - “HackerRank.” HackerRank. Accessed January 13, 2019.
     <https://www.hackerrank.com/>.
