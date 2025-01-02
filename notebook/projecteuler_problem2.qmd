@@ -3,7 +3,7 @@ title: "Project Euler: Problem 2"
 date: today
 date-format: long
 author:
-  - name: Dr. Rahul
+  - name: Rahul
     id: r2rahul
     orcid: 0000-0002-0144-1022
 format:
@@ -71,7 +71,7 @@ First, let us understand the problem structure using recommended structure of Po
 3. Compute the sum of the filtered terms.
 4. Return the computed sum.
 
-Note: After some experimentation with different methods to generate the Fibonacci sequence to manage integer overflow errors and stack overflow errors in recursive formulas, I narrowed down to using Binet's formula. The Binet implementation is adapted from Jan Vanhove's blog [@j_fib].
+Note: After some experimentation with different methods to generate the Fibonacci sequence to manage integer overflow and stack overflow errors in recursive formulas, I narrowed down to using Binet's formula. The Binet implementation is adapted from Jan Vanhove's blog [@j_fib].
 
 ## Solution
 
