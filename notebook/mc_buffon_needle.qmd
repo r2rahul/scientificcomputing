@@ -1,0 +1,182 @@
+---
+title: "Estimating Pi through Monte Carlo Simualtion"
+date: today
+date-format: long
+author:
+  - name: Rahul
+    id: r2rahul
+    orcid: 0000-0002-0144-1022
+format:
+    html: 
+      self-contained: true
+      toc: true
+      grid: 
+        margin-width: 350px
+execute: 
+  echo: fenced
+  message: false
+  warnings: false
+reference-location: margin
+citation-location: margin
+bibliography: ref.bib
+engine: julia
+---
+
+Reneder Report Link: [estimating pi through monte carlo simualtion](https://r2rahul.quarto.pub/estimating-pi-through-monte-carlo-simualtion/)
+
+## Problem Statement
+
+Implement a Monte Carlo simulation based on Buffon's needle problem to estimate the value of $\pi$. Buffon's needle is a classic problem in probability theory that relates the probability of a needle crossing parallel lines on a plane to the value of $\pi$.
+
+## Solution Plan for the Problem
+
+1.  Understanding the problem [@polya2014solve]:
+
+    -   What is given?
+        -   Buffon's needle problem: A method to estimate $\pi$ using Monte Carlo simulation.
+        -   We need to simulate dropping needles on a lined surface.
+    -   What is required?
+        -   To estimate the value of $\pi$ using this method.
+    -   What are the key components?
+        -   A surface with parallel lines
+        -   Needles of a specific length
+        -   Random tosses of needles
+        -   Counting needle crossings with lines
+    -   How does it relate to $\pi$?
+        -   The probability of a needle crossing a line is related to $\pi$.
+    -   Can we break it down?
+        -   Define the surface and needle parameters
+        -   Implement a function to toss a needle
+        -   Implement a function to check if a needle crosses a line
+        -   Perform many tosses and count crossings
+        -   Use the count to estimate $\pi$
+
+### Simulation Steps Breakdown
+
+#### Define Parameters
+
+-   Set floor width and line spacing
+-   Set needle length
+-   Set number of tosses
+
+#### Implement Needle Toss Function
+
+-   Generate random x-coordinate
+-   Generate random angle
+
+#### Implement Line Crossing Check Function
+
+-   Calculate needle endpoints
+-   Check if endpoints are on different sides of a line
+
+#### Perform Monte Carlo Simulation
+
+-   For each toss:
+    -   Toss a needle
+    -   Check if it crosses a line
+    -   Count total crosses
+
+#### Estimate $\pi$
+
+-   Use the formula:
+
+$$
+\pi \approx \frac{2 * needle\_length * number\_of\_tosses}{line\_spacing * number\_of\_crosses}
+$$
+
+## Solution
+
+Stepwise implementation of the Problem in Julia code.
+
+```{julia}
+using Random # <1>
+using Distributed # <2>
+Random.seed!(1275) # <3>
+```
+
+1. Import the Random module for generating random numbers
+2. Import the Distributed module for parallel computing capabilities
+3. Set a specific random seed for reproducibility
+
+
+```{julia}
+"""
+    toss_needle(d::Float64)
+
+Generate a random point inside a semicircle with radius `d/2`.
+
+Returns:
+- A tuple `(x, θ)` where `x` is the distance from the center of the needle to the nearest line,
+  and `θ` is the angle of the needle with the horizontal.
+"""
+function toss_needle(d::Float64)
+    x = rand() * d / 2  # <1>
+    θ = rand() * π  # <2>
+    return x, θ
+end
+```
+
+
+1. Generate a random distance from the nearest line, uniformly distributed between 0 and d/2
+2. Generate a random angle, uniformly distributed between 0 and $\pi$ radians
+
+```{julia}
+"""
+    cross_line(x::Float64, θ::Float64, L::Float64)
+
+Check if a point `(x, θ)` crosses a line parallel to the x-axis with a distance `L/2` from the center.
+
+Returns:
+- `true` if the needle crosses the line, otherwise `false`.
+"""
+function cross_line(x::Float64, θ::Float64, L::Float64)
+    return x <= (L / 2) * sin(θ)  # <1>
+end
+```
+
+1. Check if the needle crosses a line by comparing its x-coordinate to half its length times the sine of its angle
+
+```{julia}
+
+"""
+    estimate_pi_par(nb_tosses::Int64, L::Float64, d::Float64)
+
+Estimate π using Buffon's Needle method.
+
+Args:
+- `nb_tosses`: The number of random tosses to perform.
+- `L`: The length of the needle.
+- `d`: The distance between the lines.
+
+Returns:
+- An estimate of π based on the number of times the needle crosses a line.
+"""
+function estimate_pi_par(nb_tosses::Int64, L::Float64, d::Float64)
+    nb_crosses = @distributed (+) for _ in 1:nb_tosses  # <1>
+        x, θ = toss_needle(d)  # <2>
+        cross_line(x, θ, L) ? 1 : 0  # <3>
+    end
+    return (2 * L * nb_tosses) / (d * nb_crosses)  # <4>
+end
+```
+
+1. Use distributed computing to parallelize the Monte Carlo simulation
+2. Toss a needle, getting its position (x) and angle ($\theta$)
+3. Check if the needle crosses a line, returning 1 if true, 0 if false
+4. Calculate the estimate of $\pi$ using the formula derived from Buffon's needle problem
+
+
+
+```{julia}
+# Parameters
+L = 1.0  # Length of the needle
+d = 2.0  # Distance between the lines
+nb_tosses = 1_000_000  # Number of tosses
+
+```
+
+```{julia}
+# Estimate π
+π_estimate = estimate_pi_par(nb_tosses, L, d)
+println("Estimated π: $π_estimate")
+```
