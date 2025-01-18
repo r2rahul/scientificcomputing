@@ -17,17 +17,44 @@ import numpy as np
 #%%
 #mpm.mp.dps = 5; mpm.mp.pretty = False
 #%%
-def f(a,n):
+def f(a, n):
+    """
+    Calculates a mathematical expression involving square roots and exponents.
+
+    Args:
+    a (mpf): The base number for calculations.
+    n (int): The exponent to be applied.
+
+    Returns:
+    mpf: The floor of the result of (ceil(sqrt(a)) + sqrt(a))^n.
+
+    Note:
+    This function uses the mpmath library (mpm) for high-precision arithmetic.
+    """
     return mpm.floor(
-        mpm.fadd( mpm.ceil(mpm.sqrt(a)), mpm.sqrt(a))**n
+        mpm.fadd(mpm.ceil(mpm.sqrt(a)), mpm.sqrt(a))**n
     )
 
 def g(n):
+    """
+    Computes the sum of f(a, a^2) for a range of values.
+
+    Args:
+    n (int): The upper limit of the range (inclusive).
+
+    Returns:
+    mpf: The sum of f(a, a^2) for a from 1 to n.
+
+    Note:
+    This function uses the mpmath library (mpm) for high-precision arithmetic
+    and range generation.
+    """
     return mpm.fsum(
-        [f(a, a**2) for a in mpm.arange(1, (n+ 1))]
-               )
+        [f(a, a**2) for a in mpm.arange(1, (n + 1))]
+    )
+
 #%%
-__init__ = main():
+if __name__ == '__main__':
     print('f(5, 2) = '.format(f(5, 2)))
     print('f(5, 5) = '.format(f(5, 5)))
     print('***************************')
