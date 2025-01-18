@@ -1,4 +1,4 @@
-﻿Introduction to Computational Thinking Repository
+﻿Repository: Computational Thinking
 ================
 
 There is an increasing evidence that the learning capacity of the brain
