@@ -16,6 +16,7 @@ execute:
   echo: fenced
   message: false
   warnings: false
+  freeze: auto
 reference-location: margin
 citation-location: margin
 bibliography: ref.bib
